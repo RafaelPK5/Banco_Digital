@@ -2,9 +2,11 @@ import mysql from 'mysql2'
 import env from 'dotenv'
 env.config()
 
-export default mysql.createConnection({
-    host:process.env.IP,
+const conection = await mysql.createConnection({
+    host:'127.0.0.1',
     user:'root',
-    password:process.env.PASSWORD,
+    password:'PyKiller@2905',
     database:'banco_digital'
 })
+
+export default conection;

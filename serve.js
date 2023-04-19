@@ -1,15 +1,18 @@
 import express from 'express'
 import rotas from './src/app.js'
+import bodyParser from 'body-parser'
 
-const port = 3000
+
 
 const app = express()
 
+const port = 3001
+
+app.use(bodyParser.urlencoded({extended:true}))
+app.use('/public', express.static('public'));
+
+
 app.use('/', rotas)
-
-
-
-
 
 
 

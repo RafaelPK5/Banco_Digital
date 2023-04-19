@@ -1,0 +1,27 @@
+ <header>
+      <h1>Banco Digital</h1>
+    </header>
+    <main>
+      <section class="balance">
+        <h2>Saldo</h2>
+        <p>R$ 1.000,00</p>
+      </section>
+      <section class="transfer">
+        <h2>Transferência</h2>
+        <form action="/transfer" method="post">
+          <label for="to">Conta destino:</label>
+          <input type="text" id="to" name="to">
+          <label for="amount">Valor:</label>
+          <input type="text" id="amount" name="amount">
+          <button type="submit">Transferir</button>
+        </form>
+      </section>
+      <section class="withdraw">
+        <h2>Saque</h2>
+        <form action="/withdraw" method="post">
+          <label for="amount">Valor:</label>
+          <input type="text" id="amount" name="amount">
+          <button type="submit">Sacar</button>
+        </form>
+      </section>
+    </main>

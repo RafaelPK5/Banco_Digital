@@ -3,17 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
-    <link rel="stylesheet" href="/public/style.css">
+    <link rel="stylesheet" href="./CSS/loginstyle.css">
 </head>
 <body>
     <h1>Login</h1>
-    <form action="/login" method="post">
-        <label for="username">Username</label>
+    <form action="http://localhost:3001/" method="post" id="form">
+        <label for="username">CPF</label>
         <input type="text" name="username" id="username">
         <label for="password">Password</label>
         <input type="password" name="password" id="password">
-        <input type="submit" value="Login">
+        <input type="submit" value="Login" id="submit" onclick="submit()">
+        <input type="submit" value="Cadastre aqui" id="cadastre" onclick="cadastre()" >
     </form>
-    <script src="/public/script.js"></script>
+   <script src="./Script/loginScript.js"></script>
 </body>
 </html>
