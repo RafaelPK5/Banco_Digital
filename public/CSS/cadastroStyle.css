@@ -1,9 +1,12 @@
 
 /* Define a fonte usada na página */
 body {
-    font-family: Arial, sans-serif;
-    background: #000000 url('https://www.transparenttextures.com/patterns/wavecut.png');
-    padding-bottom: 11.9rem;
+  background: rgb(2, 0, 36);
+  background: linear-gradient(167deg, rgba(2, 0, 36, 1) 0%, rgba(0, 255, 67, 1) 100%, rgba(0, 212, 255, 1) 100%);
+  font-family: Arial, sans-serif;
+  background-repeat: no-repeat;
+  background-size: contain;
+  padding-bottom: 22rem;
   }
   
   /* Define a aparência do cabeçalho */
@@ -11,6 +14,7 @@ body {
     text-align: center;
     margin-bottom: 30px;
     color: #007bff;
+    
   }
   
   /* Define a largura máxima do formulário */

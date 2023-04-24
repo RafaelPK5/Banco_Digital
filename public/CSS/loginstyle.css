@@ -1,57 +1,77 @@
 body {
-  background: #000000 url('https://www.transparenttextures.com/patterns/wavecut.png');
-    font-family: Arial, sans-serif;
-  }
-  
-  #cadastre{
-    border-radius: 5px;
-    margin-top: 5px;
-    background-color: #042461;
-    color: white;
-  }
+  background: rgb(2, 0, 36);
+  background: linear-gradient(167deg, rgba(2, 0, 36, 1) 0%, rgba(0, 255, 67, 1) 100%, rgba(0, 212, 255, 1) 100%);
+  font-family: Arial, sans-serif;
+  background-repeat: no-repeat;
+  background-size: contain;
+  padding-bottom: 22rem;
+}
 
-  h1 {
-    text-align: center;
-    margin-top: 50px;
-    color: #d2fa75;
-  }
-  
-  form {
-    max-width: 400px;
-    margin: 0 auto;
-    background-color: #FFF;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-  }
-  
-  label {
-    display: block;
-    margin-bottom: 10px;
-    font-weight: bold;
-  }
-  
-  input[type="text"],
-  input[type="password"] {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 20px;
-    border-radius: 5px;
-    border: 1px solid #CCC;
-  }
-  
-  input[type="submit"] {
-    width: 100%;
-    background-color: #333;
-    color: #FFF;
-    padding: 10px;
-    border-radius: 5px;
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-  
-  input[type="submit"]:hover {
-    background-color: #222;
-  }
-  
+#cadastre {
+  border-radius: 5px;
+  margin-top: 5px;
+  background-color: #042461;
+  color: white;
+}
+
+h1 {
+  text-align: center;
+  margin-top: 50px;
+  color: #d2fa75;
+}
+
+form {
+  max-width: 400px;
+  margin: 0 auto;
+  background-color: #FFF;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+input[type="text"],
+input[type="password"],
+a {
+  width: 95%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  border: 1px solid #CCC;
+}
+
+input[type="submit"] {
+  width: 100%;
+  background-color: #333;
+  color: #FFF;
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+input[type="submit"]:hover {
+  background-color: #222;
+}
+
+#cad {
+  margin-top: 10px
+}
+
+#imagem{
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+img{
+  width: 10rem;
+  height: 10rem;
+  border-radius: 10rem;
+}

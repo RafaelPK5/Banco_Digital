@@ -1,27 +1,38 @@
- <header>
-      <h1>Banco Digital</h1>
-    </header>
-    <main>
-      <section class="balance">
-        <h2>Saldo</h2>
-        <p>R$ 1.000,00</p>
-      </section>
-      <section class="transfer">
-        <h2>Transferência</h2>
-        <form action="/transfer" method="post">
-          <label for="to">Conta destino:</label>
-          <input type="text" id="to" name="to">
-          <label for="amount">Valor:</label>
-          <input type="text" id="amount" name="amount">
-          <button type="submit">Transferir</button>
-        </form>
-      </section>
-      <section class="withdraw">
-        <h2>Saque</h2>
-        <form action="/withdraw" method="post">
-          <label for="amount">Valor:</label>
-          <input type="text" id="amount" name="amount">
-          <button type="submit">Sacar</button>
-        </form>
-      </section>
-    </main>
+<head>
+  <link rel="stylesheet" href="/public/CSS/dashboard.css">
+</head>
+<header>
+<img src="../public/Imagens/4KBank.png" alt="4K Bank" id="bank">
+  <h1>4K Bank</h1>
+  <nav>
+    <ul>
+      <li><a href="http://localhost:3001/">Conta Corrente</a></li>
+      <li><a href="#">Investimentos</a></li>
+      <li><a href="#">Empréstimos</a></li>
+      <li><a href="">Sair</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+  <section class="saldo">
+    <h2>Saldo</h2>
+    <p>R$ {{saldo}}</p>
+  </section>
+
+  <section class="botoes">
+    <h2>Funções</h2>
+    <div class="opcoes">
+      <a href="http://localhost:3001/tranferencia"><button>Transferência</button></a>
+      <a href="http://localhost:3001/saque"><button>Saque</button></a>
+      <a href="http://localhost:3001/comprovantes"><button>Comprovantes</button></a>
+      <a href="http://localhost:3001/deposito"><button>Depósito</button></a>
+    </div>
+  </section>
+</main>
+<div id="espaco"></div>
+<footer>
+  <span>&copy; 2023</span>
+  <span>4K Bank</span>
+  <span>Rafael Santana</span>
+</footer>
