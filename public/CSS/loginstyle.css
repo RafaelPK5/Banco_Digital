@@ -4,7 +4,7 @@ body {
   font-family: Arial, sans-serif;
   background-repeat: no-repeat;
   background-size: contain;
-  padding-bottom: 22rem;
+  height: 100vh;
 }
 
 #cadastre {

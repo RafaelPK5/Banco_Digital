@@ -3,6 +3,7 @@ import front from 'express-handlebars'
 import db from '../db/conect.js'
 import bodyParser from 'body-parser'
 import { LocalStorage } from 'node-localstorage';
+import comprovante from './appComp.js'
 const localStorage = new LocalStorage('./localStorage');
 
 const app = exp()
@@ -23,6 +24,14 @@ app.get('/', (req, res) => {
   res.render('login')
 })
 
+app.get('/deposito', (req,res)=>{
+  res.render('deposito')
+})
+
+app.get('/saque', (req,res)=>{
+  res.render('saque')
+})
+
 app.get('/dashboard', async (req, res)=>{
   const conta = localStorage.getItem('cpf')
   var valorTela
@@ -38,7 +47,28 @@ app.get('/cadastro', (req, res) => {
   res.render('cadastro')
 })
 
+app.post('/logDeposito', async (req,res)=>{
+  const body = req.body.valor
+  const cpf = localStorage.getItem('cpf')
+  var [rows,fields] = await  db.promise().query('select saldo from contas where usuario_id = (select id from usuarios where cpf = ?)', [cpf])
+  const saldo = rows[0].saldo
+  const valor = parseInt(saldo) + parseInt(body)
+  await db.execute('update contas set saldo = ? where usuario_id = (select id from usuarios where cpf = ?)',[valor,cpf])
+  res.redirect('/dashboard')
+})
+
+app.post('/logSaque', async (req,res)=>{
+  const body = req.body.valor
+  const cpf = localStorage.getItem('cpf')
+  var [rows,fields] = await  db.promise().query('select saldo from contas where usuario_id = (select id from usuarios where cpf = ?)', [cpf])
+  const saldo = rows[0].saldo
+  const valor = parseInt(saldo) - parseInt(body)
+  await db.execute('update contas set saldo = ? where usuario_id = (select id from usuarios where cpf = ?)',[valor,cpf])
+  res.redirect('/dashboard')
+})
+
 app.post('/login', async (req, res) => {
+  localStorage.clear()
   const cpf = req.body.cpf
   const senha = req.body.password
   const query = db.execute(`select cpf, senha from usuarios where cpf = ? and senha = ?`, [cpf, senha], (err, result) => {
@@ -86,6 +116,11 @@ app.post('/registro', async (req, res) => {
     res.redirect('/cadastro');
   }
 });
+
+app.post('/logSaque', (req,res)=>{
+  console.log(req.body)
+  res.render('dashboard')
+})
 
 app.get('/test', (req, res) => {
   db.query('select * from usuarios', (err, result) => {
