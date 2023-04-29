@@ -8,7 +8,7 @@ body {
     );
     font-family: Arial, sans-serif;
     background-repeat: no-repeat;
-    background-size: contain;
+    background-size: cover;
     height: 100vh;
   }
   
@@ -18,7 +18,7 @@ body {
     padding: 30px;
     border-radius: 1rem;
   }
-
+  
   nav {
     display: flex;
     justify-content: space-between;
@@ -57,8 +57,22 @@ body {
     justify-content: center;
     align-items: center;
     height: 5vh;
+    padding-top: 50px;
   }
   
+  label{
+    font-size: large;
+  }
+
+  input[type="text"]{
+    font-size: 1.5rem;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+    width: 20rem;
+    text-align: center;
+  }
+
   input[type="number"] {
     font-size: 1.5rem;
     padding: 0.5rem;
@@ -68,14 +82,36 @@ body {
     text-align: center;
   }
   
+  input[type="date"] {
+    background-color: #2ecc71;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    transition-duration: 0.4s;
+  }
+  
+  input[type="date"]:hover {
+    background-color: #ffffff;
+    color: #2ecc71;
+    border: 2px solid #2ecc71;
+  }
+  
+
   button[type="submit"] {
+    margin-top: 10px;
     font-size: 1.5rem;
     padding: 1rem;
     margin-left: 15px;
     background-color: #2ecc71;
     color: #000000;
     border: 1px solid black;
-    padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
   }
@@ -85,41 +121,42 @@ body {
     color: #fff;
   }
   
-  #bank{
+  #bank {
     border-radius: 100rem;
     height: 10rem;
   }
-
-  h1{
+  
+  h1 {
     color: white;
     margin-left: 25px;
   }
-
+  
   main {
     margin: 20px;
     background-color: white;
     height: 30vh;
     border-radius: 1rem;
     border: 3px solid red;
-    padding-bottom: 40px;
+    padding-bottom: 70px;
   }
-
-  main h2{
+  
+  main h2 {
     display: flex;
-    margin: auto;
-    font-size: 50px;
+    margin-top: 20px;
+    font-size: 2rem;
+    margin-left: 7rem;
   }
-
-  #caixa{
+  
+  #caixa {
     display: flex;
     justify-content: center;
   }
-
-  #forma{
+  
+  #forma {
     margin-top: 6rem;
   }
-
-  #voltar{
+  
+  #voltar {
     margin-top: 25px;
     margin-left: 15px;
     background-color: #2ecc71;
@@ -130,10 +167,11 @@ body {
     cursor: pointer;
   }
   
-  #voltar:hover{
+  #voltar:hover {
     background-color: rgba(0, 0, 0, 0.8);
     color: #fff;
   }
+  
   footer{
     position: absolute;
     bottom: 0;
@@ -141,7 +179,7 @@ body {
     justify-content: space-around;
     width: 98vw;
   }
-  
+
   #numConta{
     margin-left: 1900px;
   }

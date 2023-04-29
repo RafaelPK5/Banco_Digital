@@ -75,3 +75,10 @@ img{
   height: 10rem;
   border-radius: 10rem;
 }
+footer{
+  position: absolute;
+  bottom: 0;
+  display: flex;
+  justify-content: space-around;
+  width: 98vw;
+}

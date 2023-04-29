@@ -4,6 +4,7 @@ import db from '../db/conect.js'
 import bodyParser from 'body-parser'
 import { LocalStorage } from 'node-localstorage';
 import comprovante from './appComp.js'
+import moment from 'moment'
 const localStorage = new LocalStorage('./localStorage');
 
 const app = exp()
@@ -24,46 +25,48 @@ app.get('/', (req, res) => {
   res.render('login')
 })
 
-app.get('/deposito', (req,res)=>{
+app.get('/transferencia', (req, res) => {
+  res.render('transferencia')
+})
+
+app.get('/deposito', (req, res) => {
   res.render('deposito')
 })
 
-app.get('/saque', (req,res)=>{
+app.get('/saque', (req, res) => {
   res.render('saque')
 })
 
-app.get('/dashboard', async (req, res)=>{
+app.get('/dashboard', async (req, res) => {
   const conta = localStorage.getItem('cpf')
   var valorTela
-  await db.execute('SELECT saldo from contas WHERE usuario_id = (SELECT id FROM usuarios WHERE cpf = ?)', [conta], (err, result)=>{
+  await db.execute('SELECT saldo from contas WHERE usuario_id = (SELECT id FROM usuarios WHERE cpf = ?)', [conta], (err, result) => {
     valorTela = result[0].saldo
-    res.render('dashboard', { cssPath: '/public/CSS/dashboard.css', saldo:valorTela})
+    res.render('dashboard', { cssPath: '/public/CSS/dashboard.css', saldo: valorTela })
   })
 })
 
 app.get('/cadastro', (req, res) => {
-  console.log(req.body)
-  console.log(req.query)
   res.render('cadastro')
 })
 
-app.post('/logDeposito', async (req,res)=>{
+app.post('/logDeposito', async (req, res) => {
   const body = req.body.valor
   const cpf = localStorage.getItem('cpf')
-  var [rows,fields] = await  db.promise().query('select saldo from contas where usuario_id = (select id from usuarios where cpf = ?)', [cpf])
+  var [rows, fields] = await db.promise().query('select saldo from contas where usuario_id = (select id from usuarios where cpf = ?)', [cpf])
   const saldo = rows[0].saldo
   const valor = parseInt(saldo) + parseInt(body)
-  await db.execute('update contas set saldo = ? where usuario_id = (select id from usuarios where cpf = ?)',[valor,cpf])
+  await db.execute('update contas set saldo = ? where usuario_id = (select id from usuarios where cpf = ?)', [valor, cpf])
   res.redirect('/dashboard')
 })
 
-app.post('/logSaque', async (req,res)=>{
+app.post('/logSaque', async (req, res) => {
   const body = req.body.valor
   const cpf = localStorage.getItem('cpf')
-  var [rows,fields] = await  db.promise().query('select saldo from contas where usuario_id = (select id from usuarios where cpf = ?)', [cpf])
+  var [rows, fields] = await db.promise().query('select saldo from contas where usuario_id = (select id from usuarios where cpf = ?)', [cpf])
   const saldo = rows[0].saldo
   const valor = parseInt(saldo) - parseInt(body)
-  await db.execute('update contas set saldo = ? where usuario_id = (select id from usuarios where cpf = ?)',[valor,cpf])
+  await db.execute('update contas set saldo = ? where usuario_id = (select id from usuarios where cpf = ?)', [valor, cpf])
   res.redirect('/dashboard')
 })
 
@@ -71,8 +74,10 @@ app.post('/login', async (req, res) => {
   localStorage.clear()
   const cpf = req.body.cpf
   const senha = req.body.password
-  const query = db.execute(`select cpf, senha from usuarios where cpf = ? and senha = ?`, [cpf, senha], (err, result) => {
+
+  const query = db.execute(`select u.cpf, u.senha, c.num_conta from usuarios u, contas c where cpf = ? and senha = ?`, [cpf, senha], (err, result) => {
     if (err) throw err
+    console.log(result)
     if (!result.length == 0) {
       if (result[0].cpf == cpf) {
         if (result[0].senha == senha) {
@@ -85,7 +90,6 @@ app.post('/login', async (req, res) => {
       console.log("Credenciais inválidas!")
       res.redirect('/')
     }
-    // console.log(result)
   })
   console.log("cheguei aqui")
 })
@@ -109,7 +113,6 @@ app.post('/registro', async (req, res) => {
       console.log(resultado);
       res.redirect('/');
     } catch (err) {
-      console.error(err);
       res.redirect('/cadastro');
     }
   } else {
@@ -117,16 +120,23 @@ app.post('/registro', async (req, res) => {
   }
 });
 
-app.post('/logSaque', (req,res)=>{
+app.post('/logTransferencia', async (req, res) => {
   console.log(req.body)
-  res.render('dashboard')
+  const cpf = localStorage.getItem('cpf')
+  const cpfDest = req.body.cpfDest;
+  const valorT = req.body.valor;
+  const data = moment().format('DD/MM/YYYY HH:mm:ss')
+  console.log(data)
+  let [rows, fileds] = await db.promise().query('select saldo from contas where usuario_id = (select id from usuarios where cpf = ?)', [cpf])
+  let [row, field] = await db.promise().query('select saldo from contas where usuario_id = (select id from usuarios where cpf = ?)', [cpfDest])
+  let valor1 = parseInt(rows[0].saldo) - parseInt(valorT);
+  let valorDest = parseInt(row[0].saldo) + parseInt(valorT);
+  await db.execute('update contas set saldo = ? where usuario_id = (select id from usuarios where cpf = ?)', [valor1, cpf])
+  await db.execute('update contas set saldo = ? where usuario_id = (select id from usuarios where cpf = ?)', [valorDest, cpfDest])
+  await db.execute('Insert into transferencia(conta_origem,conta_destino, valor, data)values(?,?,?,?)',[cpf,cpfDest,valorT,data])
+  setTimeout(() => {
+    res.redirect('/dashboard')
+  },2000)
 })
 
-app.get('/test', (req, res) => {
-  db.query('select * from usuarios', (err, result) => {
-    console.log(result)
-    res.send(result)
-  })
-})
-
-export default app
+export default app;
