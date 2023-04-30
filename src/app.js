@@ -3,8 +3,9 @@ import front from 'express-handlebars'
 import db from '../db/conect.js'
 import bodyParser from 'body-parser'
 import { LocalStorage } from 'node-localstorage';
-import comprovante from './appComp.js'
 import moment from 'moment'
+import fs from 'fs'
+import PDFDocument from 'pdfkit'
 const localStorage = new LocalStorage('./localStorage');
 
 const app = exp()
@@ -134,9 +135,56 @@ app.post('/logTransferencia', async (req, res) => {
   await db.execute('update contas set saldo = ? where usuario_id = (select id from usuarios where cpf = ?)', [valor1, cpf])
   await db.execute('update contas set saldo = ? where usuario_id = (select id from usuarios where cpf = ?)', [valorDest, cpfDest])
   await db.execute('Insert into transferencia(conta_origem,conta_destino, valor, data)values(?,?,?,?)',[cpf,cpfDest,valorT,data])
-  setTimeout(() => {
-    res.redirect('/dashboard')
-  },2000)
+  let [r,f] = await db.promise().query('select nome from usuarios where cpf = ?',[cpf])
+  let [ro,fi] = await db.promise().query('select nome from usuarios where cpf = ?',[cpfDest])
+  try {
+    // Criar o comprovante em PDF
+    const doc = new PDFDocument();
+    const writeStream = fs.createWriteStream('comprovante.pdf');
+  
+    doc.pipe(writeStream);
+    doc.image('public/Imagens/4KBank.png', {
+      width: 100,
+      height: 100,
+      x: doc.page.width / 2 - 50,
+      y: 50,
+      align: 'center'
+    });
+    doc.moveDown();
+    doc.moveDown();
+    doc.moveDown();
+    doc.moveDown();
+    doc.moveDown();
+    doc.moveDown();
+    doc.moveDown();
+    doc.fontSize(17)
+
+    doc.text('COMPROVANTE DE TRANSFERÊNCIA', { align: 'center' });
+    doc.moveDown();
+    doc.moveDown();
+    doc.text(`CPF de origem: ${cpf}`, { indent: 20 });
+    doc.text(`Nome: ${r[0].nome}`,{indent:20})
+    doc.moveDown();
+    doc.moveDown();
+    doc.text(`CPF de destino: ${cpfDest}`, { indent: 20 });
+    doc.text(`Nome: ${ro[0].nome}`,{indent:20})
+    doc.moveDown();
+    doc.moveDown();
+    doc.text(`Valor transferido: R$ ${valorT}`, { indent: 20 });
+    doc.text(`Data da Tranferencia: ${data}`, {indent: 20})
+    doc.moveDown();
+  
+    doc.end();
+    // Enviar o comprovante em PDF como resposta da requisição
+    writeStream.on('finish', () => {
+      res.setHeader('Content-Disposition', 'attachment; filename=comprovante.pdf');
+      res.contentType('application/pdf');
+      fs.createReadStream('comprovante.pdf').pipe(res);
+    });
+  } catch (error) {
+    console.log(error);
+  }
 })
+    
 
 export default app;
