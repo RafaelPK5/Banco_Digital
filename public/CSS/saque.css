@@ -59,6 +59,15 @@ body {
     height: 5vh;
   }
   
+  input[type="password"]{
+    font-size: 1.5rem;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+    width: 20rem;
+    text-align: center;
+  }
+
   input[type="number"] {
     font-size: 1.5rem;
     padding: 0.5rem;

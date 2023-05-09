@@ -1,4 +1,7 @@
-
+*{
+  padding: 0;
+  margin: 0;
+}
 /* Define a fonte usada na página */
 body {
   background: rgb(2, 0, 36);
@@ -6,80 +9,91 @@ body {
   font-family: Arial, sans-serif;
   background-repeat: no-repeat;
   background-size: contain;
-  padding-bottom: 22rem;
-  }
-  
-  /* Define a aparência do cabeçalho */
-  h1 {
-    text-align: center;
-    margin-bottom: 30px;
-    color: #007bff;
-    
-  }
-  
-  /* Define a largura máxima do formulário */
-  form {
-    max-width: 500px;
-    margin: 0 auto;
-  }
-  
-  /* Define a aparência dos rótulos */
-  label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: #007bff;
-  }
-  
-  /* Define a aparência dos campos de entrada */
-  input[type="text"],
-  input[type="password"] {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 20px;
-    border: none;
-    border-bottom: 2px solid #007bff;
-    background-color: #f5f5f5;
-    color: #333;
-    font-size: 16px;
-    font-weight: bold;
-    letter-spacing: 1px;
-    transition: border-bottom 0.3s ease-in-out;
-  }
-  
-  /* Define o estilo dos campos de entrada ao passar o mouse por cima */
-  input[type="text"]:hover,
-  input[type="password"]:hover {
-    border-bottom: 2px solid #555;
-  }
-  
-  /* Define a aparência do botão de envio */
-  input[type="submit"] {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: bold;
-    letter-spacing: 1px;
-    transition: background-color 0.3s ease-in-out;
-  }
-  
-  /* Define o estilo do botão de envio ao passar o mouse por cima */
-  input[type="submit"]:hover {
-    background-color: #0062cc;
-  }
-  
-  footer{
-    position: absolute;
-    bottom: 0;
-    display: flex;
-    justify-content: space-around;
-    width: 98vw;
-  }
-  
+  height: 100vh;
+}
+
+/* Define a aparência do cabeçalho */
+h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #3700ff;
+
+}
+
+#imagem{
+  display: flex;
+  justify-content: center;
+}
+
+img{
+  height: 200px;
+  width: 200px;
+  margin: 0 auto;
+  border-radius: 1000px
+}
+
+/* Define a largura máxima do formulário */
+form {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+/* Define a aparência dos rótulos */
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #c5ba21;
+}
+
+/* Define a aparência dos campos de entrada */
+input[type="text"],
+input[type="password"] {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: none;
+  border-bottom: 2px solid #007bff;
+  background-color: #f5f5f5;
+  color: #333;
+  font-size: 16px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  transition: border-bottom 0.3s ease-in-out;
+}
+
+/* Define o estilo dos campos de entrada ao passar o mouse por cima */
+input[type="text"]:hover,
+input[type="password"]:hover {
+  border-bottom: 2px solid #555;
+}
+
+/* Define a aparência do botão de envio */
+input[type="submit"] {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  transition: background-color 0.3s ease-in-out;
+}
+
+/* Define o estilo do botão de envio ao passar o mouse por cima */
+input[type="submit"]:hover {
+  background-color: #0062cc;
+}
+
+footer {
+  position: absolute;
+  bottom: 0;
+  display: flex;
+  justify-content: space-around;
+  width: 98vw;
+}

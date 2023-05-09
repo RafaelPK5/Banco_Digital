@@ -1,4 +1,5 @@
 import exp from 'express'
+import validarCPF from '../controller/valida.js'
 import front from 'express-handlebars'
 import db from '../db/conect.js'
 import bodyParser from 'body-parser'
@@ -22,55 +23,12 @@ const handlebars = front.create({
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
 
+// Inicio
 app.get('/', (req, res) => {
   res.render('login')
 })
 
-app.get('/transferencia', (req, res) => {
-  res.render('transferencia')
-})
-
-app.get('/deposito', (req, res) => {
-  res.render('deposito')
-})
-
-app.get('/saque', (req, res) => {
-  res.render('saque')
-})
-
-app.get('/dashboard', async (req, res) => {
-  const conta = localStorage.getItem('cpf')
-  var valorTela
-  await db.execute('SELECT saldo from contas WHERE usuario_id = (SELECT id FROM usuarios WHERE cpf = ?)', [conta], (err, result) => {
-    valorTela = result[0].saldo
-    res.render('dashboard', { cssPath: '/public/CSS/dashboard.css', saldo: valorTela })
-  })
-})
-
-app.get('/cadastro', (req, res) => {
-  res.render('cadastro')
-})
-
-app.post('/logDeposito', async (req, res) => {
-  const body = req.body.valor
-  const cpf = localStorage.getItem('cpf')
-  var [rows, fields] = await db.promise().query('select saldo from contas where usuario_id = (select id from usuarios where cpf = ?)', [cpf])
-  const saldo = rows[0].saldo
-  const valor = parseInt(saldo) + parseInt(body)
-  await db.execute('update contas set saldo = ? where usuario_id = (select id from usuarios where cpf = ?)', [valor, cpf])
-  res.redirect('/dashboard')
-})
-
-app.post('/logSaque', async (req, res) => {
-  const body = req.body.valor
-  const cpf = localStorage.getItem('cpf')
-  var [rows, fields] = await db.promise().query('select saldo from contas where usuario_id = (select id from usuarios where cpf = ?)', [cpf])
-  const saldo = rows[0].saldo
-  const valor = parseInt(saldo) - parseInt(body)
-  await db.execute('update contas set saldo = ? where usuario_id = (select id from usuarios where cpf = ?)', [valor, cpf])
-  res.redirect('/dashboard')
-})
-
+// Rota de Login
 app.post('/login', async (req, res) => {
   localStorage.clear()
   const cpf = req.body.cpf
@@ -95,9 +53,56 @@ app.post('/login', async (req, res) => {
   console.log("cheguei aqui")
 })
 
+// Rota do dashboard
+app.get('/dashboard', async (req, res) => {
+  const conta = localStorage.getItem('cpf')
+  var valorTela
+  await db.execute('SELECT saldo from contas WHERE usuario_id = (SELECT id FROM usuarios WHERE cpf = ?)', [conta], (err, result) => {
+    valorTela = result[0].saldo
+    res.render('dashboard', { cssPath: '/public/CSS/dashboard.css', saldo: valorTela })
+  })
+})
 
+// rota de deposito
+app.get('/deposito', (req, res) => {
+  res.render('deposito')
+})
+
+// Logica de Deposito
+app.post('/logDeposito', async (req, res) => {
+  const body = req.body.valor
+  const cpf = localStorage.getItem('cpf')
+  var [rows, fields] = await db.promise().query('select saldo from contas where usuario_id = (select id from usuarios where cpf = ?)', [cpf])
+  const saldo = rows[0].saldo
+  const valor = parseInt(saldo) + parseInt(body)
+  await db.execute('update contas set saldo = ? where usuario_id = (select id from usuarios where cpf = ?)', [valor, cpf])
+  res.redirect('/dashboard')
+})
+
+//  Rota de Saque
+app.get('/saque', (req, res) => {
+  res.render('saque')
+})
+
+// Logica de Saque
+app.post('/logSaque', async (req, res) => {
+  const body = req.body.valor
+  const cpf = localStorage.getItem('cpf')
+  var [rows, fields] = await db.promise().query('select saldo from contas where usuario_id = (select id from usuarios where cpf = ?)', [cpf])
+  const saldo = rows[0].saldo
+  const valor = parseInt(saldo) - parseInt(body)
+  await db.execute('update contas set saldo = ? where usuario_id = (select id from usuarios where cpf = ?)', [valor, cpf])
+  res.redirect('/dashboard')
+})
+
+// Rota de Cadastro
+app.get('/cadastro', (req, res) => {
+  res.render('cadastro')
+})
+
+// Rota de Registro
 app.post('/registro', async (req, res) => {
-  if (req.body.CPF.length == 11) {
+  if (validarCPF(req.body.CPF)) {
     try {
       const params = [null, req.body.CPF, req.body.Nome, req.body.Email, req.body.Senha, req.body.Telefone, req.body.Endereco];
       if (params.some(param => param === undefined)) {
@@ -117,10 +122,28 @@ app.post('/registro', async (req, res) => {
       res.redirect('/cadastro');
     }
   } else {
-    res.redirect('/cadastro');
+    var alertMessage = "O CPF informado não é válido.";
+    res.render('cadastro',{ alertMessage: alertMessage });
   }
 });
 
+// Logica de Saque
+app.post('/logSaque', async (req, res) => {
+  const body = req.body.valor
+  const cpf = localStorage.getItem('cpf')
+  var [rows, fields] = await db.promise().query('select saldo from contas where usuario_id = (select id from usuarios where cpf = ?)', [cpf])
+  const saldo = rows[0].saldo
+  const valor = parseInt(saldo) - parseInt(body)
+  await db.execute('update contas set saldo = ? where usuario_id = (select id from usuarios where cpf = ?)', [valor, cpf])
+  res.redirect('/dashboard')
+})
+
+// rota de tranferencia
+app.get('/transferencia', (req, res) => {
+  res.render('transferencia')
+})
+
+// Logica de Transferencia 
 app.post('/logTransferencia', async (req, res) => {
   console.log(req.body)
   const cpf = localStorage.getItem('cpf')
