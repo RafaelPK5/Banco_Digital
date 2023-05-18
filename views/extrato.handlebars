@@ -1,5 +1,6 @@
 <head>
-  <link rel="stylesheet" href="/public/CSS/dashboard.css">
+    <title>Extrato</title>
+    <link rel="stylesheet" href="../public/CSS/extrato.css">
 </head>
 <header>
   <img src="../public/Imagens/4KBank.png" alt="4K Bank" id="bank">
@@ -15,24 +16,28 @@
     </ul>
   </nav>
 </header>
-
 <main>
-  <section class="saldo">
-    <h2>Saldo</h2>
-    <p>R$ {{saldo}}</p>
-  </section>
+    <h1 id="ex">Extrato</h1>
 
-  <section class="botoes">
-    <h2>Funções</h2>
-    <div class="opcoes">
-      <a href="http://localhost:3001/transferencia"><button>Transferência</button></a>
-      <a href="http://localhost:3001/saque"><button>Saque</button></a>
-      <a href="http://localhost:3001/deposito"><button>Depósito</button></a>
-      <a href="http://localhost:3001/extrato"><button>Extrato</button></a>
-    </div>
-  </section>
+    <table>
+        <thead>
+            <tr>
+                <th>Data</th>
+                <th>Tipo</th>
+                <th>Valor</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each rows}}
+            <tr>
+                <td>{{data}}</td>
+                <td>{{tipo}}</td>
+                <td>R$ {{valor}}</td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
 </main>
-<div id="espaco">{{erro}}</div>
 <footer>
   <span>&copy; 2023</span>
   <span>4K Bank</span>

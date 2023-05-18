@@ -3,17 +3,32 @@
 </head>
 <h1>Login</h1>
 <div id="imagem"><img src="/public/Imagens/4KBank.png" alt=""></div>
-    <form action="http://localhost:3001/login" method="post" id="form">
-        <label for="username">CPF</label>
-        <input type="text" name="cpf" id="username">
-        <label for="password">Senha</label>
-        <input type="password" name="password" id="password">
-        <input type="submit" value="Login" id="submit" onclick="submit()">
-    </form>
-        <form action="http://localhost:3001/cadastro" method="GET" id="cad">
-        <input type="submit" value="Cadastre aqui" id="cadastre" onclick="cadastre()" >
-        </form>
-        <footer>
-  <span>&copy; 2023</span>
-  <span>4K Bank</span>
+<form action="http://localhost:3001/login" method="post" id="form">
+    <label for="username">CPF</label>
+    <input type="text" name="cpf" id="username">
+    <label for="password">Senha</label>
+    <input type="password" name="password" id="password">
+    <input type="submit" value="Login" id="submit" onclick="showPopup()">
+</form>
+<form action="http://localhost:3001/cadastro" method="GET" id="cad">
+    <input type="submit" value="Cadastre aqui" id="cadastre" onclick="cadastre()">
+</form>
+{{#if errorPopup}}
+    {{{errorPopup}}}
+  {{/if}}
+<footer>
+    <span>&copy; 2023</span>
+    <span>4K Bank</span>
 </footer>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+      var popup = document.getElementById("errorPopup");
+      function showPopup() {
+        setTimeout(function() {
+          popup.setAttribute("hidden", "");
+        }, 3000);
+        
+      }
+      showPopup();
+    });
+  </script>

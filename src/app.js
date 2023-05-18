@@ -30,28 +30,32 @@ app.get('/', (req, res) => {
 
 // Rota de Login
 app.post('/login', async (req, res) => {
-  localStorage.clear()
-  const cpf = req.body.cpf
-  const senha = req.body.password
+  localStorage.clear();
+  const usuario = req.body.cpf;
+  const cpf = usuario.replace(/[^\d]/g, "")
+  const senha = req.body.password;
 
   const query = db.execute(`select u.cpf, u.senha, c.num_conta from usuarios u, contas c where cpf = ? and senha = ?`, [cpf, senha], (err, result) => {
-    if (err) throw err
-    console.log(result)
+    if (err) throw err;
+    console.log(result);
     if (!result.length == 0) {
       if (result[0].cpf == cpf) {
         if (result[0].senha == senha) {
-          console.log('logado!')
-          localStorage.setItem('cpf', cpf)
-          res.redirect('/dashboard')
+          console.log('logado!');
+          localStorage.setItem('cpf', cpf);
+          res.redirect('/dashboard');
         }
       }
     } else {
-      console.log("Credenciais inválidas!")
-      res.redirect('/')
+      console.log("Credenciais inválidas!");
+      const errorMessage = "Credenciais inválidas!";
+      const errorPopup = `<div id="errorPopup" class="popup">
+                              <h3>${errorMessage}</h3>
+                          </div>`;
+      res.render('login', { errorPopup });
     }
-  })
-  console.log("cheguei aqui")
-})
+  });
+});
 
 // Rota do dashboard
 app.get('/dashboard', async (req, res) => {
@@ -70,12 +74,14 @@ app.get('/deposito', (req, res) => {
 
 // Logica de Deposito
 app.post('/logDeposito', async (req, res) => {
+  const data = moment().format('DD/MM/YYYY HH:mm:ss')
   const body = req.body.valor
   const cpf = localStorage.getItem('cpf')
   var [rows, fields] = await db.promise().query('select saldo from contas where usuario_id = (select id from usuarios where cpf = ?)', [cpf])
   const saldo = rows[0].saldo
   const valor = parseInt(saldo) + parseInt(body)
   await db.execute('update contas set saldo = ? where usuario_id = (select id from usuarios where cpf = ?)', [valor, cpf])
+  await db.execute('Insert into transferencia(conta_origem, conta_destino, valor, data, tipo)values(?,?,?,?,?)', [cpf, null, body, data, "Depósito"])
   res.redirect('/dashboard')
 })
 
@@ -86,13 +92,24 @@ app.get('/saque', (req, res) => {
 
 // Logica de Saque
 app.post('/logSaque', async (req, res) => {
-  const body = req.body.valor
-  const cpf = localStorage.getItem('cpf')
-  var [rows, fields] = await db.promise().query('select saldo from contas where usuario_id = (select id from usuarios where cpf = ?)', [cpf])
-  const saldo = rows[0].saldo
-  const valor = parseInt(saldo) - parseInt(body)
-  await db.execute('update contas set saldo = ? where usuario_id = (select id from usuarios where cpf = ?)', [valor, cpf])
-  res.redirect('/dashboard')
+  const errorMessage = "Senha inválida!";
+  const errorPopup = `<div id="errorPopup" class="popup">
+                              <h3>${errorMessage}</h3>
+                          </div>`;
+  const data = moment().format('DD/MM/YYYY HH:mm:ss')
+  try {
+    const body = req.body.valor
+    const senha = req.body.senha
+    const cpf = localStorage.getItem('cpf')
+    var [rows, fields] = await db.promise().query('select saldo from contas where usuario_id = (select id from usuarios where cpf = ? and senha = ?)', [cpf, senha])
+    const saldo = rows[0].saldo
+    const valor = parseInt(saldo) - parseInt(body)
+    await db.execute('update contas set saldo = ? where usuario_id = (select id from usuarios where cpf = ?)', [valor, cpf])
+    await db.execute('Insert into transferencia(conta_origem, conta_destino, valor, data, tipo)values(?,?,?,?,?)', [cpf, null, body, data, "Saque"])
+    res.redirect('/dashboard')
+  } catch (error) {
+    res.render('saque', { errorPopup })
+  }
 })
 
 // Rota de Cadastro
@@ -102,6 +119,10 @@ app.get('/cadastro', (req, res) => {
 
 // Rota de Registro
 app.post('/registro', async (req, res) => {
+  const errorMessage = "Credenciais inválidas!";
+  const errorPopup = `<div id="errorPopup" class="popup">
+                              <h3>${errorMessage}</h3>
+                          </div>`;
   if (validarCPF(req.body.CPF)) {
     try {
       const params = [null, req.body.CPF, req.body.Nome, req.body.Email, req.body.Senha, req.body.Telefone, req.body.Endereco];
@@ -116,27 +137,15 @@ app.post('/registro', async (req, res) => {
         throw new Error('Um ou mais parâmetros de ligação são undefined');
       }
       const resultado = await db.promise().execute("INSERT INTO contas(usuario_id,tipo,saldo,num_conta) VALUES (?,?,?,?)", params2);
-      console.log(resultado);
       res.redirect('/');
     } catch (err) {
-      res.redirect('/cadastro');
+      res.render('/cadastro');
     }
   } else {
     var alertMessage = "O CPF informado não é válido.";
-    res.render('cadastro',{ alertMessage: alertMessage });
+    res.render('cadastro', { errorPopup });
   }
 });
-
-// Logica de Saque
-app.post('/logSaque', async (req, res) => {
-  const body = req.body.valor
-  const cpf = localStorage.getItem('cpf')
-  var [rows, fields] = await db.promise().query('select saldo from contas where usuario_id = (select id from usuarios where cpf = ?)', [cpf])
-  const saldo = rows[0].saldo
-  const valor = parseInt(saldo) - parseInt(body)
-  await db.execute('update contas set saldo = ? where usuario_id = (select id from usuarios where cpf = ?)', [valor, cpf])
-  res.redirect('/dashboard')
-})
 
 // rota de tranferencia
 app.get('/transferencia', (req, res) => {
@@ -147,67 +156,82 @@ app.get('/transferencia', (req, res) => {
 app.post('/logTransferencia', async (req, res) => {
   console.log(req.body)
   const cpf = localStorage.getItem('cpf')
-  const cpfDest = req.body.cpfDest;
-  const valorT = req.body.valor;
-  const data = moment().format('DD/MM/YYYY HH:mm:ss')
-  console.log(data)
-  let [rows, fileds] = await db.promise().query('select saldo from contas where usuario_id = (select id from usuarios where cpf = ?)', [cpf])
-  let [row, field] = await db.promise().query('select saldo from contas where usuario_id = (select id from usuarios where cpf = ?)', [cpfDest])
-  let valor1 = parseInt(rows[0].saldo) - parseInt(valorT);
-  let valorDest = parseInt(row[0].saldo) + parseInt(valorT);
-  await db.execute('update contas set saldo = ? where usuario_id = (select id from usuarios where cpf = ?)', [valor1, cpf])
-  await db.execute('update contas set saldo = ? where usuario_id = (select id from usuarios where cpf = ?)', [valorDest, cpfDest])
-  await db.execute('Insert into transferencia(conta_origem,conta_destino, valor, data)values(?,?,?,?)',[cpf,cpfDest,valorT,data])
-  let [r,f] = await db.promise().query('select nome from usuarios where cpf = ?',[cpf])
-  let [ro,fi] = await db.promise().query('select nome from usuarios where cpf = ?',[cpfDest])
-  try {
-    // Criar o comprovante em PDF
-    const doc = new PDFDocument();
-    const writeStream = fs.createWriteStream('comprovante.pdf');
-  
-    doc.pipe(writeStream);
-    doc.image('public/Imagens/4KBank.png', {
-      width: 100,
-      height: 100,
-      x: doc.page.width / 2 - 50,
-      y: 50,
-      align: 'center'
-    });
-    doc.moveDown();
-    doc.moveDown();
-    doc.moveDown();
-    doc.moveDown();
-    doc.moveDown();
-    doc.moveDown();
-    doc.moveDown();
-    doc.fontSize(17)
+  const senha = req.body.senha
+  let [lista, campos] = await db.promise().query('select senha from usuarios where cpf = ?', [cpf])
+  console.log(lista)
+  if (lista[0].senha == senha) {
+    const cpfDest = req.body.cpfDest;
+    const valorT = req.body.valor;
+    const data = moment().format('DD/MM/YYYY HH:mm:ss')
+    let [rows, fileds] = await db.promise().query('select saldo from contas where usuario_id = (select id from usuarios where cpf = ?)', [cpf])
+    let [row, field] = await db.promise().query('select saldo from contas where usuario_id = (select id from usuarios where cpf = ?)', [cpfDest])
+    let valor1 = parseInt(rows[0].saldo) - parseInt(valorT);
+    let valorDest = parseInt(row[0].saldo) + parseInt(valorT);
+    await db.execute('update contas set saldo = ? where usuario_id = (select id from usuarios where cpf = ?)', [valor1, cpf])
+    await db.execute('update contas set saldo = ? where usuario_id = (select id from usuarios where cpf = ?)', [valorDest, cpfDest])
+    await db.execute('Insert into transferencia(conta_origem,conta_destino, valor, data, tipo)values(?,?,?,?,?)', [cpf, cpfDest, valorT, data, "PIX"])
+    let [r, f] = await db.promise().query('select nome from usuarios where cpf = ?', [cpf])
+    let [ro, fi] = await db.promise().query('select nome from usuarios where cpf = ?', [cpfDest])
+    try {
+      // Criar o comprovante em PDF
+      const doc = new PDFDocument();
+      const writeStream = fs.createWriteStream('comprovante.pdf');
 
-    doc.text('COMPROVANTE DE TRANSFERÊNCIA', { align: 'center' });
-    doc.moveDown();
-    doc.moveDown();
-    doc.text(`CPF de origem: ${cpf}`, { indent: 20 });
-    doc.text(`Nome: ${r[0].nome}`,{indent:20})
-    doc.moveDown();
-    doc.moveDown();
-    doc.text(`CPF de destino: ${cpfDest}`, { indent: 20 });
-    doc.text(`Nome: ${ro[0].nome}`,{indent:20})
-    doc.moveDown();
-    doc.moveDown();
-    doc.text(`Valor transferido: R$ ${valorT}`, { indent: 20 });
-    doc.text(`Data da Tranferencia: ${data}`, {indent: 20})
-    doc.moveDown();
-  
-    doc.end();
-    // Enviar o comprovante em PDF como resposta da requisição
-    writeStream.on('finish', () => {
-      res.setHeader('Content-Disposition', 'attachment; filename=comprovante.pdf');
-      res.contentType('application/pdf');
-      fs.createReadStream('comprovante.pdf').pipe(res);
-    });
-  } catch (error) {
-    console.log(error);
+      doc.pipe(writeStream);
+      doc.image('public/Imagens/4KBank.png', {
+        width: 100,
+        height: 100,
+        x: doc.page.width / 2 - 50,
+        y: 50,
+        align: 'center'
+      });
+      doc.moveDown();
+      doc.moveDown();
+      doc.moveDown();
+      doc.moveDown();
+      doc.moveDown();
+      doc.moveDown();
+      doc.moveDown();
+      doc.fontSize(17)
+
+      doc.text('COMPROVANTE DE TRANSFERÊNCIA', { align: 'center' });
+      doc.moveDown();
+      doc.moveDown();
+      doc.text(`CPF de origem: ${cpf}`, { indent: 20 });
+      doc.text(`Nome: ${r[0].nome}`, { indent: 20 })
+      doc.moveDown();
+      doc.moveDown();
+      doc.text(`CPF de destino: ${cpfDest}`, { indent: 20 });
+      doc.text(`Nome: ${ro[0].nome}`, { indent: 20 })
+      doc.moveDown();
+      doc.moveDown();
+      doc.text(`Valor transferido: R$ ${valorT}`, { indent: 20 });
+      doc.text(`Data da Tranferencia: ${data}`, { indent: 20 })
+      doc.moveDown();
+
+      doc.end();
+      // Enviar o comprovante em PDF como resposta da requisição
+      writeStream.on('finish', () => {
+        res.setHeader('Content-Disposition', 'attachment; filename=comprovante.pdf');
+        res.contentType('application/pdf');
+        fs.createReadStream('comprovante.pdf').pipe(res);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  } else {
+    const errorMessage = "Senha inválida!";
+    const errorPopup = `<div id="errorPopup" class="popup">
+                              <h3>${errorMessage}</h3>
+                          </div>`;
+    res.render('transferencia', { errorPopup })
   }
-})
-    
 
+})
+
+app.get('/extrato', async (req, res) => {
+  const cpf = localStorage.getItem('cpf')
+  const [rows, fields] = await db.promise().query('SELECT valor, data, tipo from transferencia where conta_origem = ? or conta_destino = ?', [cpf, cpf])
+  res.render('extrato', { rows })
+})
 export default app;

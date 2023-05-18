@@ -97,3 +97,19 @@ footer {
   justify-content: space-around;
   width: 98vw;
 }
+
+.popup {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 20px;
+  background-color: #f1f1f1;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  z-index: 9999;
+}
+
+.popup h3 {
+  margin-top: 0;
+}

@@ -1,156 +1,171 @@
+*{
+  padding: 0;
+  margin: 0;
+}
+
 body {
-    background: rgb(2, 0, 36);
-    background: linear-gradient(
-      167deg,
+  background: rgb(2, 0, 36);
+  background: linear-gradient(167deg,
       rgba(2, 0, 36, 1) 0%,
       rgba(0, 255, 67, 1) 100%,
-      rgba(0, 212, 255, 1) 100%
-    );
-    font-family: Arial, sans-serif;
-    background-repeat: no-repeat;
-    background-size: contain;
-    height: 100vh;
-  }
-  
-  header {
-    background-color: rgba(0, 0, 0, 1);
-    color: #fff;
-    padding: 30px;
-    border-radius: 1rem;
-  }
+      rgba(0, 212, 255, 1) 100%);
+  font-family: Arial, sans-serif;
+  background-repeat: no-repeat;
+  background-size: contain;
+  height: 100vh;
+}
 
-  nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: rgba(0, 0, 0, 0.8);
-    padding: 1rem;
-  }
-  
-  nav img {
-    height: 5rem;
-    margin-right: 1rem;
-  }
-  
-  nav ul {
-    list-style: none;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 40%;
-  }
-  
-  nav ul li a {
-    color: #fff;
-    text-decoration: none;
-    padding: 1rem;
-    border-radius: 0.5rem;
-  }
-  
-  nav ul li a:hover {
-    background-color: rgba(255, 255, 255, 0.3);
-  }
-  
-  form {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 5vh;
-  }
-  
-  input[type="password"]{
-    font-size: 1.5rem;
-    padding: 0.5rem;
-    border-radius: 0.5rem;
-    margin-bottom: 1rem;
-    width: 20rem;
-    text-align: center;
-  }
+header {
+  background-color: rgba(0, 0, 0, 1);
+  color: #fff;
+  padding: 30px;
+}
 
-  input[type="number"] {
-    font-size: 1.5rem;
-    padding: 0.5rem;
-    border-radius: 0.5rem;
-    margin-bottom: 1rem;
-    width: 20rem;
-    text-align: center;
-  }
-  
-  button[type="submit"] {
-    font-size: 1.5rem;
-    padding: 1rem;
-    margin-left: 15px;
-    background-color: #2ecc71;
-    color: #000000;
-    border: 1px solid black;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  button[type="submit"]:hover {
-    background-color: rgba(0, 0, 0, 0.8);
-    color: #fff;
-  }
-  
-  #bank{
-    border-radius: 100rem;
-    height: 10rem;
-  }
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.8);
+  padding: 1rem;
+}
 
-  h1{
-    color: white;
-    margin-left: 25px;
-  }
+nav img {
+  height: 5rem;
+  margin-right: 1rem;
+}
 
-  main {
-    margin: 20px;
-    background-color: white;
-    height: 30vh;
-    border-radius: 1rem;
-    border: 3px solid red;
-    padding-bottom: 40px;
-  }
+nav ul {
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 40%;
+}
 
-  main h2{
-    display: flex;
-    margin: auto;
-    font-size: 50px;
-  }
+nav ul li a {
+  color: #fff;
+  text-decoration: none;
+  padding: 1rem;
+  border-radius: 0.5rem;
+}
 
-  #caixa{
-    display: flex;
-    justify-content: center;
-  }
+nav ul li a:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
 
-  #forma{
-    margin-top: 6rem;
-  }
+form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 5vh;
+}
 
-  #voltar{
-    margin-top: 25px;
-    margin-left: 15px;
-    background-color: #2ecc71;
-    color: #000000;
-    border: 1px solid black;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  #voltar:hover{
-    background-color: rgba(0, 0, 0, 0.8);
-    color: #fff;
-  }
-  footer{
-    position: absolute;
-    bottom: 0;
-    display: flex;
-    justify-content: space-around;
-    width: 98vw;
-  }
-  
-  #numConta{
-    margin-left: 1900px;
-  }
+input[type="password"] {
+  font-size: 1.5rem;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+  width: 20rem;
+  text-align: center;
+}
+
+input[type="number"] {
+  font-size: 1.5rem;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+  width: 20rem;
+  text-align: center;
+}
+
+button[type="submit"] {
+  font-size: 1.5rem;
+  padding: 1rem;
+  margin-left: 15px;
+  background-color: #2ecc71;
+  color: #000000;
+  border: 1px solid black;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button[type="submit"]:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #fff;
+}
+
+#bank {
+  border-radius: 100rem;
+  height: 10rem;
+}
+
+h1 {
+  color: white;
+  margin-left: 25px;
+}
+
+main {
+  margin: 20px;
+  background-color: white;
+  height: 30vh;
+  border-radius: 1rem;
+  border: 3px solid red;
+  padding-bottom: 130px;
+}
+
+main h2 {
+  display: flex;
+  margin: auto;
+  font-size: 50px;
+}
+
+#caixa {
+  display: flex;
+  justify-content: center;
+}
+
+#forma {
+  margin-top: 6rem;
+}
+
+#voltar {
+  margin-top: 25px;
+  margin-left: 15px;
+  background-color: #2ecc71;
+  color: #000000;
+  border: 1px solid black;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#voltar:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #fff;
+}
+
+footer {
+  position: absolute;
+  bottom: 0;
+  display: flex;
+  justify-content: space-around;
+  width: 98vw;
+}
+
+.popup {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 20px;
+  background-color: #f1f1f1;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  z-index: 9999;
+}
+
+.popup h3 {
+  margin-top: 0;
+}

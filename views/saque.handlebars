@@ -1,6 +1,6 @@
 <head>
     <meta charset="utf-8">
-    <title>Depósito - 4K Bank</title>
+    <title>Saque - 4K Bank</title>
     <link rel="stylesheet" type="text/css" href="../public/CSS/saque.css">
 </head>
 
@@ -14,6 +14,7 @@
                 <li><a href="http://localhost:3001/transferencia">Transferência</a></li>
                 <li><a href="http://localhost:3001/deposito">Depósito</a></li>
                 <li><a href="http://localhost:3001/saque">Saque</a></li>
+                <li><a href="http://localhost:3001/extrato">Extrato</a></li>
                 <li><a href="http://localhost:3001/">Sair</a></li>
             </ul>
         </nav>
@@ -33,8 +34,23 @@
             </form>
         </div>
     </main>
+    {{#if errorPopup}}
+    {{{errorPopup}}}
+    {{/if}}
     <footer>
         <span>&copy; 2023</span>
         <span>4K Bank</span>
     </footer>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var popup = document.getElementById("errorPopup");
+            function showPopup() {
+                setTimeout(function () {
+                    popup.setAttribute("hidden", "");
+                }, 3000);
+
+            }
+            showPopup();
+        });
+    </script>
 </body>
